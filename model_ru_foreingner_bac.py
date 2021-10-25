@@ -1,6 +1,6 @@
 import nltk
-from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
+from nltk.stem.snowball import SnowballStemmer
+stemmer = SnowballStemmer("russian")
 import numpy
 import tflearn
 import tensorflow as tf
@@ -9,12 +9,12 @@ import random
 import pickle
 
 
-with open('intents.json') as file:
+with open('intents_ru_foreingner_bac.json') as file:
     data = json.load(file)
 
 
 try:
-    with open('testdata.pickle', 'rb') as f:
+    with open('testdata_ru_foreingner_bac.pickle', 'rb') as f:
         words, labels, training, output = pickle.load(f)
 except:
     # Prepare Data
@@ -26,7 +26,7 @@ except:
 
     for intent in data['intents']:
         for pattern in intent['patterns']:
-            wrds = nltk.word_tokenize(pattern)
+            wrds = nltk.word_tokenize(pattern, language='russian')
             words.extend(wrds)
             docs_x.append(wrds)
             docs_y.append(intent['tag'])
@@ -63,7 +63,7 @@ except:
     training = numpy.array(training)
     output = numpy.array(output)
 
-    with open('testdata.pickle', 'wb') as f:
+    with open('testdata_ru_foreingner_bac.pickle', 'wb') as f:
        pickle.dump((words,labels,training,output), f)
 ###################################################
 
@@ -77,10 +77,10 @@ net = tflearn.regression(net)
 model = tflearn.DNN(net)
 
 try:
-   model.load('testModel.tflearn')
+   model.load('Model_ru_foreingner_bac.tflearn')
 except:
     model.fit(training, output, n_epoch=10000, show_metric=True)
-    model.save('testModel.tflearn')
+    model.save('Model_ru_foreingner_bac.tflearn')
 
 def bag_of_words(sentence, words):
     bag = [0 for _ in range(len(words))]
@@ -91,15 +91,13 @@ def bag_of_words(sentence, words):
                 bag[i] = 1
     return numpy.array(bag)
 
-def chat_AI(message):
+def chat_AI_ru_foreingner(message):
     results = model.predict([bag_of_words(message, words)])
     results_index = numpy.argmax(results)
     tag = labels[results_index]
     if results[0][results_index] < 0.3:
-        return "Sorry, I cannot answer this question. Reformulate it or contact the applicable commission. Thank you for understanding."
+        return "Извините, я не могу ответить на этот вопрос. Переформулируйте Ваше обращение или обратитесь в приемную комиссию. Спасибо за понимание."
     for tg in data['intents']:
         if tg['tag'] == tag:
             responses = tg['responses']
     return random.choice(responses)
-
-

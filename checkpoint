@@ -1,2 +1,2 @@
-model_checkpoint_path: "/Users/akabynda/pyhonProject/SPBU_Telegram_Bot_For_Applicants/testModel_ru.tflearn"
-all_model_checkpoint_paths: "/Users/akabynda/pyhonProject/SPBU_Telegram_Bot_For_Applicants/testModel_ru.tflearn"
+model_checkpoint_path: "/Users/akabynda/pyhonProject/SPBU_Telegram_Bot_For_Applicants/Model_ru_asp.tflearn"
+all_model_checkpoint_paths: "/Users/akabynda/pyhonProject/SPBU_Telegram_Bot_For_Applicants/Model_ru_asp.tflearn"

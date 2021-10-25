@@ -89,22 +89,6 @@
       "context_set": ""
     },
     {
-      "tag": "Foreign language programs",
-      "patterns": [
-        "Foreign language programs",
-        "Master Degree Programmes in English",
-        "Master Degree Programmes in German",
-        "Master Degree Programmes in Italian",
-        "Master Degree Programmes in French",
-        "Master Degree Programmes in Spanish",
-        "Master Degree Programmes in foreign language"
-      ],
-      "responses": [
-        "You can find this information here: https://english.spbu.ru/education/graduate/master-in-english"
-      ],
-      "context_set": ""
-    },
-    {
       "tag": "Recognition of foreign educational credentials",
       "patterns": [
         "Recognition of foreign educational credentials",
@@ -253,39 +237,6 @@
       ],
       "responses": [
         "You can find this information here: https://english.spbu.ru/education/undergraduate/specialist"
-      ],
-      "context_set": ""
-    },
-    {
-      "tag": "Master Degree Programmes",
-      "patterns": [
-        "Master Degree Programmes",
-        "What Master's programs are available at SPbU?",
-        "List of Master educational programs",
-        "List of Master programs",
-        "What educational Master's programs are being implemented at SPbU?"
-      ],
-      "responses": [
-        "You can find this information here: https://english.spbu.ru/education/graduate/master"
-      ],
-      "context_set": ""
-    },
-    {
-      "tag": "Aspirantura programme",
-      "patterns": [
-        "Aspirantura programme",
-        "How to apply for postgraduate school?",
-        "Doctoral programs",
-        "List of Doctoral programs",
-        "Does SPbU have postgraduate programs?",
-        "List of postgraduate programs",
-        "What educational Master's programs are being implemented at SPbU?",
-        "PHD",
-        "Do you have PHD?",
-        "I want to apply to PHD"
-      ],
-      "responses": [
-        "You can find this information here: https://english.spbu.ru/education/phd"
       ],
       "context_set": ""
     }

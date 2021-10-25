@@ -9,12 +9,12 @@ import random
 import pickle
 
 
-with open('intents_ru_foreingner.json') as file:
+with open('intents_ru_bac.json') as file:
     data = json.load(file)
 
 
 try:
-    with open('testdata_ru_foreingner.pickle', 'rb') as f:
+    with open('testdata_ru_bac.pickle', 'rb') as f:
         words, labels, training, output = pickle.load(f)
 except:
     # Prepare Data
@@ -63,7 +63,7 @@ except:
     training = numpy.array(training)
     output = numpy.array(output)
 
-    with open('testdata_ru_foreingner.pickle', 'wb') as f:
+    with open('testdata_ru_bac.pickle', 'wb') as f:
        pickle.dump((words,labels,training,output), f)
 ###################################################
 
@@ -77,10 +77,10 @@ net = tflearn.regression(net)
 model = tflearn.DNN(net)
 
 try:
-   model.load('testModel_ru_foreingner.tflearn')
+   model.load('Model_ru_bac.tflearn')
 except:
-    model.fit(training, output, n_epoch=10000, show_metric=True)
-    model.save('testModel_ru_foreingner.tflearn')
+    model.fit(training, output, n_epoch=10500, show_metric=True)
+    model.save('Model_ru_bac.tflearn')
 
 def bag_of_words(sentence, words):
     bag = [0 for _ in range(len(words))]
@@ -91,7 +91,7 @@ def bag_of_words(sentence, words):
                 bag[i] = 1
     return numpy.array(bag)
 
-def chat_AI_ru_foreingner(message):
+def chat_AI_ru(message):
     results = model.predict([bag_of_words(message, words)])
     results_index = numpy.argmax(results)
     tag = labels[results_index]

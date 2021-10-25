@@ -2,12 +2,11 @@ import telebot
 import config
 from telebot import types
 from data import change_language, get_language, change_foreigner, get_foreigner, change_degree, get_degree
-from model import chat_AI
-from model_ru import chat_AI_ru
-from model_ru_foreingner import chat_AI_ru_foreingner
+import model_ru_bac, model_mast, model_bac, model_asp, model_ru_asp, model_ru_mast, model_ru_ord, \
+    model_ru_foreingner_mast, model_ru_foreingner_asp, model_ru_foreingner_bac
 import json
 
-with open('intents.json') as file:
+with open('intents_bac.json') as file:
     data = json.load(file)
 # Bot API
 bot = telebot.TeleBot(config.BOT_TOKEN)
@@ -92,7 +91,8 @@ def callback_inline(call):
             if get_language(call.message.chat.id) == "RUS":
                 bot.send_message(call.message.chat.id,
                                  "Хорошо! Чтобы сменить интересующую степень образования, введите команду /degree")
-                change_degree(call.message.chat.id, get_language(call.message.chat.id), get_foreigner(call.message.chat.id),
+                change_degree(call.message.chat.id, get_language(call.message.chat.id),
+                              get_foreigner(call.message.chat.id),
                               call.data)
                 bot.edit_message_text(text="Пожалуйста, выберите интересующую Вас степень образования.",
                                       chat_id=call.message.chat.id,
@@ -100,7 +100,8 @@ def callback_inline(call):
             elif get_language(call.message.chat.id) == "ENG":
                 bot.send_message(call.message.chat.id,
                                  "Fine! To change the degree of education you are interested in, enter the command /degree")
-                change_degree(call.message.chat.id, get_language(call.message.chat.id), get_foreigner(call.message.chat.id),
+                change_degree(call.message.chat.id, get_language(call.message.chat.id),
+                              get_foreigner(call.message.chat.id),
                               call.data)
                 bot.edit_message_text(text="Please select the degree of education you are interested in.",
                                       chat_id=call.message.chat.id,
@@ -110,12 +111,33 @@ def callback_inline(call):
 @bot.message_handler(content_types=['text'])
 def answers(message):
     if get_language(message.chat.id) == "ENG":
-        bot.send_message(message.chat.id, chat_AI(message.text))
-    else:
+        if get_degree(message.chat.id) == "Bachelor":
+            bot.send_message(message.chat.id, model_bac.chat_AI(message.text))
+        if get_degree(message.chat.id) == "Master":
+            bot.send_message(message.chat.id, model_mast.chat_AI(message.text))
+        if get_degree(message.chat.id) == "PhD":
+            bot.send_message(message.chat.id, model_asp.chat_AI(message.text))
+        if get_degree(message.chat.id) == "Residency":
+            bot.send_message(message.chat.id, "Sorry, I do not have information in English, so the level of education is for you.")
+    elif get_language(message.chat.id) == "RUS":
         if get_foreigner(message.chat.id) == "NO":
-            bot.send_message(message.chat.id, chat_AI_ru(message.text))
-        else:
-            bot.send_message(message.chat.id, chat_AI_ru_foreingner(message.text))
+            if get_degree(message.chat.id) == "Bachelor":
+                bot.send_message(message.chat.id, model_ru_bac.chat_AI_ru(message.text))
+            if get_degree(message.chat.id) == "Master":
+                bot.send_message(message.chat.id, model_ru_mast.chat_AI_ru(message.text))
+            if get_degree(message.chat.id) == "PhD":
+                bot.send_message(message.chat.id, model_ru_asp.chat_AI_ru(message.text))
+            if get_degree(message.chat.id) == "Residency":
+                bot.send_message(message.chat.id, model_ru_ord.chat_AI_ru(message.text))
+        elif get_foreigner(message.chat.id) == "YES":
+            if get_degree(message.chat.id) == "Bachelor":
+                bot.send_message(message.chat.id, model_ru_foreingner_bac.chat_AI_ru_foreingner(message.text))
+            if get_degree(message.chat.id) == "Master":
+                bot.send_message(message.chat.id, model_ru_foreingner_mast.chat_AI_ru_foreingner(message.text))
+            if get_degree(message.chat.id) == "PhD":
+                bot.send_message(message.chat.id, model_ru_foreingner_asp.chat_AI_ru_foreingner(message.text))
+            if get_degree(message.chat.id) == "Residency":
+                bot.send_message(message.chat.id, model_ru_ord.chat_AI_ru(message.text))
 
 
 bot.polling(none_stop=True)
