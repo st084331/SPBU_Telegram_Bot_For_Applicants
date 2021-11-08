@@ -1,13 +1,13 @@
+# This Python file uses the following encoding: utf-8
+#!spbubotenv3.9/bin python3
+
 import telebot
-import config
 from telebot import types
+import config
 from data import change_language, get_language, change_foreigner, get_foreigner, change_degree, get_degree
 import model_ru_bac, model_mast, model_bac, model_asp, model_ru_asp, model_ru_mast, model_ru_ord, \
     model_ru_foreingner_mast, model_ru_foreingner_asp, model_ru_foreingner_bac
-import json
 
-with open('intents_bac.json') as file:
-    data = json.load(file)
 # Bot API
 bot = telebot.TeleBot(config.BOT_TOKEN)
 
@@ -118,7 +118,8 @@ def answers(message):
         if get_degree(message.chat.id) == "PhD":
             bot.send_message(message.chat.id, model_asp.chat_AI(message.text))
         if get_degree(message.chat.id) == "Residency":
-            bot.send_message(message.chat.id, "Sorry, I do not have information in English, so the level of education is for you.")
+            bot.send_message(message.chat.id,
+                             "Sorry, I do not have information in English, so the level of education is for you.")
     elif get_language(message.chat.id) == "RUS":
         if get_foreigner(message.chat.id) == "NO":
             if get_degree(message.chat.id) == "Bachelor":

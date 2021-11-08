@@ -1,3 +1,5 @@
+# This Python file uses the following encoding: utf-8
+#!spbubotenv3.9/bin python3
 import nltk
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("russian")
@@ -7,14 +9,15 @@ import tensorflow as tf
 import json
 import random
 import pickle
+import config
 
 
-with open('intents_ru_asp.json') as file:
+with open(f'{config.prefix}intents_ru_asp.json') as file:
     data = json.load(file)
 
 
 try:
-    with open('testdata_ru_asp.pickle', 'rb') as f:
+    with open(f'{config.prefix}testdata_ru_asp.pickle', 'rb') as f:
         words, labels, training, output = pickle.load(f)
 except:
     # Prepare Data
@@ -63,8 +66,18 @@ except:
     training = numpy.array(training)
     output = numpy.array(output)
 
-    with open('testdata_ru_asp.pickle', 'wb') as f:
+    with open(f'{config.prefix}testdata_ru_asp.pickle', 'wb') as f:
        pickle.dump((words,labels,training,output), f)
+    tf.compat.v1.reset_default_graph()
+    net = tflearn.input_data(shape=[None, len(training[0])])
+    net = tflearn.fully_connected(net, 10)
+    net = tflearn.fully_connected(net, 10)
+    net = tflearn.fully_connected(net, len(output[0]), activation='softmax')
+    net = tflearn.regression(net)
+
+    model = tflearn.DNN(net)
+    model.fit(training, output, n_epoch=10000, show_metric=True)
+    model.save(f'{config.prefix}Model_ru_asp.tflearn')
 ###################################################
 
 tf.compat.v1.reset_default_graph()
@@ -77,10 +90,11 @@ net = tflearn.regression(net)
 model = tflearn.DNN(net)
 
 try:
-   model.load('Model_ru_asp.tflearn')
+   model.load(f'{config.prefix}Model_ru_asp.tflearn')
 except:
-    model.fit(training, output, n_epoch=10500, show_metric=True)
-    model.save('Model_ru_asp.tflearn')
+    model.fit(training, output, n_epoch=10000, show_metric=True)
+    model.save(f'{config.prefix}Model_ru_asp.tflearn')
+    model.load(f'{config.prefix}Model_ru_asp.tflearn')
 
 def bag_of_words(sentence, words):
     bag = [0 for _ in range(len(words))]

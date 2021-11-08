@@ -1,54 +1,56 @@
+# This Python file uses the following encoding: utf-8
+#!spbubotenv3.9/bin python3
 import sqlite3
-
+import config
 __connection = None
 
 
 def get_connection():
     global __connection
     if __connection is None:
-        __connection = sqlite3.connect('user_data.db', check_same_thread=False)
+        __connection = sqlite3.connect(f"{config.prefix}user_data.db", check_same_thread=False)
     return __connection
 
 
-def init_db(force: bool = False):
+def init_db():
     conn = get_connection()
     c = conn.cursor()
     c.execute('''
     CREATE TABLE IF NOT EXISTS user_data (
     user_id INTEGER NOT NULL,
-    langue TEXT,
+    language TEXT,
     foreigner TEXT, 
-    deg TEXT
+    degree TEXT
     )
     ''')
     conn.commit()
 
 
-def add_user(user_id, langue, foreigner, deg):
-    conn = get_connection()
-    c = conn.cursor()
-    c.execute(f"SELECT user_id FROM user_data WHERE user_id = {user_id} ")
-    if c.fetchone() is None:
-        c.execute('INSERT INTO user_data (user_id, langue, foreigner, deg) VALUES (?, ?, ?, ?)',
-                  (user_id, langue, foreigner, deg))
-    conn.commit()
-
-
-def change_language(user_id, langue, foreigner, deg):
+def add_user(user_id, language, foreigner, degree):
     conn = get_connection()
     c = conn.cursor()
     c.execute(f"SELECT user_id FROM user_data WHERE user_id = {user_id}")
     if c.fetchone() is None:
-        add_user(user_id, langue, foreigner, deg)
+        c.execute('INSERT INTO user_data (user_id, language, foreigner, degree) VALUES (?, ?, ?, ?)',
+                  (user_id, language, foreigner, degree))
+    conn.commit()
+
+
+def change_language(user_id, language, foreigner, degree):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute(f"SELECT user_id FROM user_data WHERE user_id = {user_id}")
+    if c.fetchone() is None:
+        add_user(user_id, language, foreigner, degree)
     else:
-        c.execute(f"UPDATE user_data SET langue = '{langue}' WHERE user_id = {user_id}")
+        c.execute(f"UPDATE user_data SET language = '{language}' WHERE user_id = {user_id}")
     conn.commit()
 
 
 def get_language(user_id):
     conn = get_connection()
     c = conn.cursor()
-    c.execute(f"SELECT langue FROM user_data WHERE user_id = {user_id}")
+    c.execute(f"SELECT language FROM user_data WHERE user_id = {user_id}")
     lang = c.fetchone()
     if lang is None:
         conn.commit()
@@ -64,12 +66,12 @@ def get_language(user_id):
         return "None"
 
 
-def change_foreigner(user_id, langue, foreigner, deg):
+def change_foreigner(user_id, language, foreigner, degree):
     conn = get_connection()
     c = conn.cursor()
     c.execute(f"SELECT user_id FROM user_data WHERE user_id = {user_id}")
     if c.fetchone() is None:
-        add_user(user_id, langue, foreigner, deg)
+        add_user(user_id, language, foreigner, degree)
     else:
         c.execute(f"UPDATE user_data SET foreigner = '{foreigner}' WHERE user_id = {user_id}")
     conn.commit()
@@ -94,21 +96,21 @@ def get_foreigner(user_id):
         return "None"
 
 
-def change_degree(user_id, langue, foreigner, deg):
+def change_degree(user_id, language, foreigner, degree):
     conn = get_connection()
     c = conn.cursor()
     c.execute(f"SELECT user_id FROM user_data WHERE user_id = {user_id}")
     if c.fetchone() is None:
-        add_user(user_id, langue, foreigner, deg)
+        add_user(user_id, language, foreigner, degree)
     else:
-        c.execute(f"UPDATE user_data SET deg = '{deg}' WHERE user_id = {user_id}")
+        c.execute(f"UPDATE user_data SET degree = '{degree}' WHERE user_id = {user_id}")
     conn.commit()
 
 
 def get_degree(user_id):
     conn = get_connection()
     c = conn.cursor()
-    c.execute(f"SELECT deg FROM user_data WHERE user_id = {user_id}")
+    c.execute(f"SELECT degree FROM user_data WHERE user_id = {user_id}")
     lang = c.fetchone()
     if lang is None:
         conn.commit()
