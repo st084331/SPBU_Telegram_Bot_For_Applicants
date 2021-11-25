@@ -1,8 +1,8 @@
 # This Python file uses the following encoding: utf-8
 #!spbubotenv3.9/bin python3
 import nltk
-from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
+from nltk.stem.snowball import SnowballStemmer
+stemmer = SnowballStemmer('english')
 import numpy
 import tflearn
 import tensorflow as tf
